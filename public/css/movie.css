@@ -1,0 +1,25 @@
+.wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 550px;
+  flex-flow: column;
+}
+
+label {
+  color: blueviolet;
+}
+input {
+  margin: 20px;
+}
+
+.btns {
+  text-align: center;
+}
+
+input[type="button"] {
+  background-color: blueviolet;
+  border-radius: 50%;
+  padding: 15px;
+  border: 2px solid white;
+}
