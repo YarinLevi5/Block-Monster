@@ -1,9 +1,10 @@
+h1 {
+  text-align: center;
+}
 .wrapper {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 550px;
-  flex-flow: column;
 }
 
 label {
@@ -13,10 +14,19 @@ input {
   margin: 20px;
 }
 
-.btns {
-  text-align: center;
+.result {
+  display: flex;
+  justify-content: center;
+  margin-top: 50px;
 }
 
+.btns {
+  margin-top: 80px;
+  text-align: center;
+}
+.movie {
+  margin: 10px;
+}
 input[type="button"] {
   background-color: blueviolet;
   border-radius: 50%;

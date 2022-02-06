@@ -32,17 +32,15 @@ $(function () {
 
   let selectMoviesList = $("<select>");
 
-  let getAllMovies = (selectMovie) => {
+  let getAllMovies = () => {
     $.get("/allMovies", (moviesData) => {
       $.each(moviesData, (_, movie) => {
         let option = $("<option>");
-        option.text(movie.name);
-        option.attr("value", movie._id);
+        option.text(movie.name).attr("value", movie._id);
         selectMoviesList.append(option);
       });
-      $(".wrapper").append(selectMoviesList);
+      $(".result").append(selectMoviesList);
     });
-    selectMovie();
   };
 
   let selectMovie = () => {
@@ -59,7 +57,8 @@ $(function () {
   };
 
   $('[data-role="updateBtn"]').click(() => {
-    getAllMovies(selectMovie);
+    getAllMovies();
+    selectMovie();
   });
 
   $('[data-role="saveBtn"]').click(() => {
@@ -68,11 +67,55 @@ $(function () {
       url: "/updateMovie/" + $(selectMoviesList).val(),
       type: "PUT",
       data: newMovie,
-      success: function (data) {
+      success: function () {
         alert("Data was saved.");
       },
     });
+    $(selectMoviesList).remove();
     resetFields();
+  });
+
+  $('[data-role="lastMovie"]').click(() => {
+    fetch("/lastMovie")
+      .then((response) => response.json())
+      .then((movie) => showData(movie))
+      .catch((err) => console.log(err));
+  });
+
+  function showData(movie) {
+    $.each(movie, (key, value) => {
+      if (key === "__v") {
+        key.html("");
+      }
+      let movieObj = $(`<p class='movie'> ${key} :${value}</p>`);
+      $(".result").append(movieObj);
+    });
+  }
+
+  $('[data-role="country"]').click(() => {
+    let countryInput = $("<input>");
+    let findBtn = $('<input type="button">').val("Find");
+    $(".result").append(countryInput, findBtn);
+    $(findBtn).click(() => {
+      $.get("/findMovie/" + $(countryInput).val(), (movie) => {
+        showData(movie);
+      });
+      findBtn.remove();
+      countryInput.remove();
+    });
+  });
+
+  $('[data-role="movieId"]').click(() => {
+    getAllMovies();
+    $(selectMoviesList).change(() => {
+      let movieId = $(selectMoviesList).val();
+      $.get("/findMovie/" + movieId, (movie) => {
+        console.log(movie);
+      });
+      $.get("/download", () => {
+        window.open("/download");
+      });
+    });
   });
 
   let resetFields = () => {

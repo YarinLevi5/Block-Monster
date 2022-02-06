@@ -1,5 +1,9 @@
+const { default: axios } = require("axios");
 const express = require("express");
-(app = express()), (mongoose = require("mongoose")), (port = 3000);
+(app = express()),
+  (mongoose = require("mongoose")),
+  (port = 3000),
+  (fs = require("fs-extra"));
 
 app.use(express.json());
 app.use(
@@ -14,6 +18,9 @@ let {
   getAllMovies,
   getMovie,
   updateMovie,
+  getLastMovie,
+  getMovieByCountry,
+  writeJson,
 } = require("./controllers/moviesController");
 
 app.get("/", (req, res) => {
@@ -51,4 +58,29 @@ app.put("/updateMovie/:movieId", (req, res) => {
   updateMovie(req.params.movieId, req.body)
     .then((movie) => res.json(movie))
     .catch((err) => res.send(err));
+});
+
+app.get("/lastMovie", (req, res) => {
+  getLastMovie()
+    .then((movie) => res.json(movie))
+    .catch((err) => res.send(err));
+});
+
+app.get("/findMovie/:country", (req, res, next) => {
+  getMovieByCountry(req.params.country)
+    .then((movie) => res.json(movie))
+    .catch((err) => res.send(err));
+  next();
+});
+
+app.get("/findMovie/:movieId", (req, res) => {
+  getMovie(req.params.movieId)
+    .then((movie) => writeJson(movie))
+    .catch((err) => res.send(err));
+});
+
+app.get("/download", (req, res) => {
+  res.download(__dirname + "/movie.json", (err) => {
+    if (err) console.log(err);
+  });
 });
