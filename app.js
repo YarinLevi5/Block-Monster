@@ -84,3 +84,12 @@ app.get("/download", (req, res) => {
     if (err) console.log(err);
   });
 });
+
+//Imdb-Api
+
+app.get("/searchMovie/:name", (req, res) => {
+  axios
+    .get("http://imdb-api.com/en/API/SearchMovie/k_pd6rvcb0/" + req.params.name)
+    .then((data) => res.json(data.data))
+    .catch((err) => console.log(err));
+});

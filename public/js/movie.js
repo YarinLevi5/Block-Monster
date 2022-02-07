@@ -118,6 +118,25 @@ $(function () {
     });
   });
 
+  $('[data-role="searchBtn"]').click(() => {
+    let movieName = $('[name="movie-name"]').val();
+    fetch("/searchMovie/" + movieName)
+      .then((movies) => movies.json())
+      .then((data) => displayMoviesData(data))
+      .catch((err) => console.log(err));
+  });
+
+  let displayMoviesData = (data) => {
+    let moviesData = data.results;
+    $.each(moviesData, (_, field) => {
+      let div = $(`<div data-role=${field.id}>`);
+      let p = $(`<p>${field.title}</p><p>${field.description}</p>`);
+      div.append(p);
+      div.append(`<img src=${field.image} width=200px alt=image of the movie>`);
+      $(".movies").append(div);
+    });
+  };
+
   let resetFields = () => {
     $("input[type=text]").val("");
     $("input[type=date]").val("");
